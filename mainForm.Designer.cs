@@ -53,7 +53,7 @@
             this.oldProfilePanel.Controls.Add(this.oldProfilePlaceholder);
             this.oldProfilePanel.Location = new System.Drawing.Point(47, 88);
             this.oldProfilePanel.Name = "oldProfilePanel";
-            this.oldProfilePanel.Size = new System.Drawing.Size(688, 227);
+            this.oldProfilePanel.Size = new System.Drawing.Size(690, 227);
             this.oldProfilePanel.TabIndex = 0;
             this.oldProfilePanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.oldProfilePanel_DragDrop);
             this.oldProfilePanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.oldProfilePanel_DragEnter);
@@ -75,7 +75,7 @@
             this.oldProfilePlaceholder.Font = new System.Drawing.Font("Bahnschrift Light", 8F);
             this.oldProfilePlaceholder.Location = new System.Drawing.Point(-1, 0);
             this.oldProfilePlaceholder.Name = "oldProfilePlaceholder";
-            this.oldProfilePlaceholder.Size = new System.Drawing.Size(688, 26);
+            this.oldProfilePlaceholder.Size = new System.Drawing.Size(690, 26);
             this.oldProfilePlaceholder.TabIndex = 2;
             this.oldProfilePlaceholder.Text = "440eb7fa4f98f14894176bb8.json";
             this.oldProfilePlaceholder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -85,10 +85,10 @@
             // 
             this.placeholderTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.placeholderTitle.Font = new System.Drawing.Font("Courier New", 14F);
+            this.placeholderTitle.Font = new System.Drawing.Font("Bahnschrift SemiBold", 16F);
             this.placeholderTitle.Location = new System.Drawing.Point(47, 9);
             this.placeholderTitle.Name = "placeholderTitle";
-            this.placeholderTitle.Size = new System.Drawing.Size(688, 50);
+            this.placeholderTitle.Size = new System.Drawing.Size(690, 50);
             this.placeholderTitle.TabIndex = 2;
             this.placeholderTitle.Text = "SPT-AKI Profile Porter";
             this.placeholderTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -98,7 +98,7 @@
             this.displayProfileCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.displayProfileCounter.Cursor = System.Windows.Forms.Cursors.Hand;
             this.displayProfileCounter.Font = new System.Drawing.Font("Bahnschrift Light", 10F);
-            this.displayProfileCounter.Location = new System.Drawing.Point(599, 49);
+            this.displayProfileCounter.Location = new System.Drawing.Point(601, 49);
             this.displayProfileCounter.Name = "displayProfileCounter";
             this.displayProfileCounter.Size = new System.Drawing.Size(136, 36);
             this.displayProfileCounter.TabIndex = 3;
@@ -121,7 +121,7 @@
             this.bBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bBrowse.Location = new System.Drawing.Point(47, 334);
             this.bBrowse.Name = "bBrowse";
-            this.bBrowse.Size = new System.Drawing.Size(688, 40);
+            this.bBrowse.Size = new System.Drawing.Size(690, 40);
             this.bBrowse.TabIndex = 4;
             this.bBrowse.Text = "Select SPT folder to install to";
             this.bBrowse.UseVisualStyleBackColor = true;
@@ -173,9 +173,9 @@
             this.bClearList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.bClearList.Cursor = System.Windows.Forms.Cursors.Hand;
             this.bClearList.Font = new System.Drawing.Font("Bahnschrift Light", 10F);
-            this.bClearList.Location = new System.Drawing.Point(341, 49);
+            this.bClearList.Location = new System.Drawing.Point(440, 49);
             this.bClearList.Name = "bClearList";
-            this.bClearList.Size = new System.Drawing.Size(252, 36);
+            this.bClearList.Size = new System.Drawing.Size(155, 36);
             this.bClearList.TabIndex = 9;
             this.bClearList.Text = "Clear list";
             this.bClearList.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -189,7 +189,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(40)))));
-            this.ClientSize = new System.Drawing.Size(782, 461);
+            this.ClientSize = new System.Drawing.Size(784, 461);
             this.Controls.Add(this.bClearList);
             this.Controls.Add(this.bBrowse2);
             this.Controls.Add(this.placeholderLbl);
@@ -205,6 +205,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(750, 500);
             this.Name = "mainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Port SPT Profile";
