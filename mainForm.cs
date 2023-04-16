@@ -26,7 +26,7 @@ namespace SelfDestruct
         public Color idleColor = Color.FromArgb(255, 35, 35, 40);
         public Color hoverColor = Color.FromArgb(255, 30, 30, 35);
         public Color selectColor = Color.FromArgb(255, 25, 25, 30);
-        public Font idleFont = new Font("Bahnschrift Light", 8, FontStyle.Regular);
+        public Font idleFont = new Font("Bahnschrift Light", 7, FontStyle.Regular);
 
         public mainForm()
         {
@@ -35,10 +35,8 @@ namespace SelfDestruct
 
         private void mainForm_Load(object sender, EventArgs e)
         {
-            displayProfileCounter.Text = "Clear list";
             pathBrowse.Text = "";
             profileTimer.Start();
-
             placeholderTitle.Select();
         }
 
@@ -80,6 +78,8 @@ namespace SelfDestruct
 
         public void listSystem(string[] arr)
         {
+            List<string> bleedingEdgeProfiles = new List<string>();
+
             clearUI(oldProfilePanel);
             for (int i = 0; i < arr.Length; i++)
             {
@@ -87,31 +87,53 @@ namespace SelfDestruct
 
                 JObject parsedProfile = JObject.Parse(File.ReadAllText(arr[i]));
                 JToken _Nickname = parsedProfile.SelectToken("characters.pmc.Info.Nickname");
+                JToken _Level = parsedProfile.SelectToken("characters.pmc.Info.Level");
                 JToken version = parsedProfile.SelectToken("aki.version");
 
-                lbl.Text = $"{arr[i]} - {_Nickname} [{version}]";
+                if (version.ToString().ToLower().Contains("bleedingedge"))
+                {
+                    bleedingEdgeProfiles.Add($"-> {_Nickname.ToString()} (Lvl {_Level.ToString()})");
+                }
+                else
+                {
+                    lbl.Text = $"{arr[i]} - {_Nickname} [{version}]";
 
-                lbl.AutoSize = false;
-                lbl.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
-                lbl.TextAlign = ContentAlignment.MiddleLeft;
-                lbl.Size = new Size(oldProfilePlaceholder.Size.Width - 2, default_item_height);
-                lbl.Location = new Point(default_item_loc_x, default_item_loc_y + (i * default_item_spacer));
-                lbl.Font = idleFont;
-                lbl.BackColor = Color.Transparent;
-                lbl.ForeColor = idleText;
-                lbl.Margin = new Padding(1, 1, 1, 1);
-                lbl.Cursor = Cursors.Hand;
-                lbl.MouseEnter += new EventHandler(lbl_MouseEnter);
-                lbl.MouseLeave += new EventHandler(lbl_MouseLeave);
-                lbl.MouseDown += new MouseEventHandler(lbl_MouseDown);
-                lbl.MouseUp += new MouseEventHandler(lbl_MouseUp);
-                lbl.TextAlign = ContentAlignment.MiddleLeft;
-                lbl.Visible = true;
-                oldProfilePanel.Controls.Add(lbl);
+                    lbl.AutoSize = false;
+                    lbl.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
+                    lbl.TextAlign = ContentAlignment.MiddleLeft;
+                    lbl.Size = new Size(oldProfilePlaceholder.Size.Width - 2, default_item_height);
+                    lbl.Location = new Point(default_item_loc_x, default_item_loc_y + (i * default_item_spacer));
+                    lbl.Font = idleFont;
+                    lbl.BackColor = Color.Transparent;
+                    lbl.ForeColor = idleText;
+                    lbl.Margin = new Padding(1, 1, 1, 1);
+                    lbl.Cursor = Cursors.Hand;
+                    lbl.MouseEnter += new EventHandler(lbl_MouseEnter);
+                    lbl.MouseLeave += new EventHandler(lbl_MouseLeave);
+                    lbl.MouseDown += new MouseEventHandler(lbl_MouseDown);
+                    lbl.MouseUp += new MouseEventHandler(lbl_MouseUp);
+                    lbl.TextAlign = ContentAlignment.MiddleLeft;
+                    lbl.Visible = true;
+                    oldProfilePanel.Controls.Add(lbl);
+                }
             }
 
             bBrowse.Visible = true;
             pathBrowse.Visible = true;
+            displayProfileCounter.Text = "Browse for profiles";
+
+            if (bleedingEdgeProfiles.Count == 1)
+            {
+                string msg = $"";
+                msg = $"One profile comes from a Bleeding Edge build, proceeding without it.\n\n{string.Join(Environment.NewLine, bleedingEdgeProfiles)}";
+                MessageBox.Show(msg, this.Text, MessageBoxButtons.OK);
+            }
+            else if (bleedingEdgeProfiles.Count > 1)
+            {
+                string msg = $"";
+                msg = $"Several profiles come from a Bleeding Edge build, proceeding without them.\n\n{string.Join(Environment.NewLine, bleedingEdgeProfiles)}";
+                MessageBox.Show(msg, this.Text, MessageBoxButtons.OK);
+            }
         }
 
         private void lbl_MouseEnter(object sender, EventArgs e)
@@ -173,9 +195,42 @@ namespace SelfDestruct
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
+            List<string> newProfiles = new List<string>();
+            List<string> existingProfiles = new List<string>();
+
             if (files != null)
             {
-                listSystem(files);
+                if (oldProfilePanel.Controls.Count > 0)
+                {
+                    foreach (Control profile in oldProfilePanel.Controls)
+                    {
+                        if (profile is Label)
+                        {
+                            int index = profile.Text.Trim().IndexOf("-");
+                            if (index != -1)
+                            {
+                                string newText = profile.Text.Trim().Substring(0, index);
+                                existingProfiles.Add(newText);
+                            }
+                        }
+                    }
+
+                    foreach (string item in files)
+                    {
+                        newProfiles.Add(item);
+                    }
+
+                    List<string> combinedProfiles = new List<string>();
+                    combinedProfiles.AddRange(existingProfiles);
+                    combinedProfiles.AddRange(newProfiles);
+
+                    string[] profileArr = combinedProfiles.ToArray();
+                    listSystem(profileArr);
+                }
+                else
+                {
+                    listSystem(files);
+                }
             }
         }
 
@@ -422,9 +477,41 @@ namespace SelfDestruct
 
         private void displayProfileCounter_Click(object sender, EventArgs e)
         {
-            clearUI(oldProfilePanel);
-            clearInterface();
+            List<string> profileList = new List<string>();
+            OpenFileDialog profileBrowser = new OpenFileDialog();
 
+            profileBrowser.ValidateNames = false;
+            profileBrowser.CheckFileExists = false;
+            profileBrowser.CheckPathExists = true;
+            profileBrowser.Multiselect = true;
+
+            profileBrowser.FileName = "Select one or more profiles.";
+            if (profileBrowser.ShowDialog() == DialogResult.OK)
+            {
+                if (oldProfilePanel.Controls.Count > 0)
+                {
+                    foreach (Control profile in oldProfilePanel.Controls)
+                    {
+                        if (profile is Label)
+                        {
+                            int index = profile.Text.Trim().IndexOf("-");
+                            if (index != -1)
+                            {
+                                string newText = profile.Text.Trim().Substring(0, index);
+                                profileList.Add(newText);
+                            }
+                        }
+                    }
+                }
+
+                foreach (string file in profileBrowser.FileNames)
+                {
+                    profileList.Add(file);
+                    string[] profileArr = profileList.ToArray();
+                    listSystem(profileArr);
+                    placeholderTitle.Select();
+                }
+            }
         }
 
         private void displayProfileCounter_MouseEnter(object sender, EventArgs e)
@@ -435,6 +522,22 @@ namespace SelfDestruct
         private void displayProfileCounter_MouseLeave(object sender, EventArgs e)
         {
             displayProfileCounter.ForeColor = Color.LightGray;
+        }
+
+        private void bClearList_Click(object sender, EventArgs e)
+        {
+            clearUI(oldProfilePanel);
+            clearInterface();
+        }
+
+        private void bClearList_MouseEnter(object sender, EventArgs e)
+        {
+            bClearList.ForeColor = Color.DodgerBlue;
+        }
+
+        private void bClearList_MouseLeave(object sender, EventArgs e)
+        {
+            bClearList.ForeColor = idleText;
         }
     }
 }
